@@ -1,0 +1,6 @@
+#!/bin/bash
+
+for (( i=$1; i <= $2; i++ ))
+do
+qsub -q long /home/itep/skobliakov/FLUX/MFLUX
+done

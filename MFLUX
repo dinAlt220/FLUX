@@ -1,0 +1,9 @@
+#!/bin/bash
+export PATH=$HOME/.local/bin:$PATH
+export CC=$HOME/.local/bin/gcc
+export CXX=$HOME/.local/bin/g++
+export LD_LIBRARY_PATH=$HOME/.local/lib64:$LD_LIBRARY_PATH
+source /home/itep/skobliakov/CERN/geant4.11.0.4-install/bin/geant4.sh
+cd $HOME/FLUX/build/
+./Mdet
+
