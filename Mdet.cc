@@ -139,7 +139,7 @@ int main(int argc,char** argv)
     double par1 = G4Threading::G4GetThreadId() + a1;
     G4Random::setTheSeed( seed1, par1);
 
-    int number = 100000;
+    int number = 10000;
     UImanager->ApplyCommand("/run/beamOn " + std::to_string(number));
     
     delete ui;

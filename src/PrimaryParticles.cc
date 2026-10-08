@@ -62,7 +62,7 @@ void PrimaryParticles::GeneratePrimaries(G4Event* event){
 	double x = r * cos(phi1);
 	double y = r * sin(phi1);
 
-	cout << E << endl;
+	// cout << E << endl;
 
     fParticleGun->SetParticleMomentumDirection(G4ThreeVector(vec_dir[0], vec_dir[1], vec_dir[2]) );
     fParticleGun->SetParticleEnergy(E*GeV);

@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-phys = "QGSP_BIC_HP"
+phys = ""
 
 MASS = {"el": 0.000511, "mu": 0.10566}
 
@@ -53,7 +53,7 @@ def get(name):
     return (el_E, mu_E, el_ang, mu_ang)
 
 
-el_E, mu_E, el_ang, mu_ang = get("EPOS")
+el_E, mu_E, el_ang, mu_ang = get("TEST2")
 
 cor_el_E = np.zeros(100000)
 cor_mu_E = np.zeros(100)
@@ -76,7 +76,7 @@ for i in mu_E:
 
 
 el_g4 = []
-with open("../build/1km_" + phys + "_electron_data_.txt", "r") as file:
+with open("../build/electron_data" + phys + ".txt", "r") as file:
     lines = file.readlines()
     for line in lines:
 
@@ -88,7 +88,7 @@ el_g4 = np.array(el_g4)
 
 
 mu_g4 = []
-with open("../build/1km_" + phys + "_muon_data.txt", "r") as file:
+with open("../build/muon_data" + phys + ".txt", "r") as file:
     lines = file.readlines()
     for line in lines:
 
@@ -103,10 +103,16 @@ g4_el = np.zeros(100000)
 g4_mu = np.zeros(100)
 
 for i in el_g4:
-    g4_el[int(i*1000)] += 1
+    try:
+        g4_el[int(i*1000)] += 1
+    except:
+        pass
 
 for i in mu_g4:
-    g4_mu[round(i)] += 1
+    try:
+        g4_mu[round(i)] += 1
+    except:
+        pass
 
 
 
@@ -158,7 +164,7 @@ print(len(el_E) / len(mu_E))
 
 
 theta_el_g4 = []
-with open("../build/1km_" + phys + "_electron_data_.txt", "r") as file:
+with open("../build/electron_data" + phys + ".txt", "r") as file:
     lines = file.readlines()
     for line in lines:
 
@@ -178,7 +184,7 @@ theta_el_g4 = np.array(theta_el_g4)
 
 
 theta_mu_g4 = []
-with open("../build/1km_" + phys + "_muon_data.txt", "r") as file:
+with open("../build/muon_data" + phys + ".txt", "r") as file:
     lines = file.readlines()
     for line in lines:
 
@@ -231,7 +237,7 @@ plt.ylabel("Number of particles")
 plt.xlabel("Zenith angle [deg]")
 
 # plt.xscale("log")
-plt.yscale("log")
+# plt.yscale("log")
 
 plt.legend()
 plt.grid(True, which="major", color="black", linestyle="-", linewidth=0.5)
@@ -253,7 +259,7 @@ plt.ylabel("Number of particles")
 plt.xlabel("Zenith angle [deg]")
 
 # plt.xscale("log")
-plt.yscale("log")
+# plt.yscale("log")
 
 plt.legend()
 plt.grid(True, which="major", color="black", linestyle="-", linewidth=0.5)

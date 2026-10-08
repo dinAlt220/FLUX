@@ -129,7 +129,7 @@ G4String p_name = step->GetTrack()->GetDynamicParticle()->GetDefinition()->GetPa
 		{
 
 
-			ofstream file1("muon_data_" + to_string(p) + ".txt", ios::app);
+			ofstream file1("muon_data_nocos.txt", ios::app);
 
 			MU++;
 			G4Track* track = step->GetTrack(); 
@@ -152,7 +152,7 @@ G4String p_name = step->GetTrack()->GetDynamicParticle()->GetDefinition()->GetPa
 		{
 
 
-			ofstream file2("electron_data_" + to_string(p) + ".txt", ios::app);
+			ofstream file2("electron_data_nocos.txt", ios::app);
 
 			G4Track* track = step->GetTrack(); 
 			G4ThreeVector momentum = track->GetMomentumDirection(); 

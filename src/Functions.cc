@@ -20,7 +20,7 @@ double Functions::dIdp(double theta, double E)
 	double alpha = -3.915;
 	double beta = 1.165;
 
-	return A * pow((E + B), alpha) * pow(E, beta) * sin(theta) * cos(theta);
+	return A * pow((E + B), alpha) * pow(E, beta) * sin(theta);
 }
 
 

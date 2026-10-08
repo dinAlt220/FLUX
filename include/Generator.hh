@@ -26,7 +26,7 @@ public:
 	int cout_temp = 0;
 	int cout = 0;
 
-	int E1 = 1;
+	int E1 = 15;
 	int E2 = 100000;
 
 
