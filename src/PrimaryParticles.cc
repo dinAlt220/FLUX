@@ -15,7 +15,7 @@
 #include <iostream>
 #include <vector>
 #include "Randomize.hh"
-
+#include "G4Threading.hh"
 using namespace std;
 
 
@@ -36,13 +36,13 @@ PrimaryParticles::PrimaryParticles(){
 
 void PrimaryParticles::GeneratePrimaries(G4Event* event){
 
-    ac = ac + 1;
+    // ac = ac + 1;
 
-    if (ac == 100*n)
-    {     
-        n++;
-        cout << ac << endl;
-    }
+    // if (ac == 100*n)
+    // {     
+    //     n++;
+    //     cout << ac << endl;
+    // }
 
     double seed = clock(  );
     G4double a = -(1000000)+2*1000000*G4UniformRand();
@@ -66,7 +66,7 @@ void PrimaryParticles::GeneratePrimaries(G4Event* event){
 
     fParticleGun->SetParticleMomentumDirection(G4ThreeVector(vec_dir[0], vec_dir[1], vec_dir[2]) );
     fParticleGun->SetParticleEnergy(E*GeV);
-    fParticleGun->SetParticlePosition(G4ThreeVector(0*km, 0*km, 31399*m));
+    fParticleGun->SetParticlePosition(G4ThreeVector(0*km, 0*km, (31400 + 6371000)*m));
 
     fParticleGun->GeneratePrimaryVertex(event); 
 

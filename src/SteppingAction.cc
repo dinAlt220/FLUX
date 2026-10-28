@@ -89,47 +89,40 @@ G4String p_name = step->GetTrack()->GetDynamicParticle()->GetDefinition()->GetPa
 	if (vname == "det")
 	{
 
+
 		G4StepPoint* point1 = step->GetPreStepPoint();
 		G4ThreeVector pos1 = point1->GetPosition();
 
-		const G4AffineTransform transformation = point1->GetTouchable()->GetHistory()->GetTopTransform();
-		G4ThreeVector localPosition = transformation.TransformPoint(pos1);
-
-
-		double X = localPosition.x()/km;
-		double Y = localPosition.y()/km;
-
-		double R = sqrt(pow(X,2) + pow(Y,2));
-
-		// cout << R << endl;
-		int evID = G4RunManager::GetRunManager()->GetCurrentEvent()->GetEventID();
-
-
-
-		if (count == 0 and vname == "det")
-		{
-			double seed = clock(  );
-			G4double a = -(1000000)+2*1000000*G4UniformRand();
-			double par = G4Threading::G4GetThreadId() + a;
-			G4Random::setTheSeed( seed, par);
-			p = 1000000000 * G4UniformRand();
-		}
-		count++;
-
+		G4ThreeVector stepPos = point1->GetPosition();
 
 		G4int trackID = step->GetTrack()->GetTrackID();
 
 		G4String p_name = step->GetTrack()->GetDynamicParticle()->GetDefinition()->GetParticleName();
+		
+		string jobid = getenv("PBS_JOBID") ? getenv("PBS_JOBID") : "local";
+
+
+
 
 
 		G4Track* track = step->GetTrack(); 
 		G4double kinEnergy = track->GetKineticEnergy()/GeV; 
 
-		if ((p_name == "mu-" or p_name == "mu+") and R < 1000)
+		if ((p_name == "mu-" or p_name == "mu+"))
 		{
 
 
-			ofstream file1("muon_data_nocos.txt", ios::app);
+			const G4VTouchable *touchable = point1->GetTouchable();
+			const G4RotationMatrix *rot = touchable->GetRotation();
+			G4RotationMatrix rotInv = rot->inverse();
+			G4ThreeVector transl = touchable->GetTranslation();
+			G4VSolid *sector = touchable->GetSolid();
+			G4ThreeVector posLoc = *rot * (stepPos - transl);
+			G4ThreeVector norm = sector->SurfaceNormal(posLoc);
+			G4ThreeVector normGlob = rotInv * norm;
+
+
+			ofstream file1("data/muon_data_" + jobid + ".txt", ios::app);
 
 			MU++;
 			G4Track* track = step->GetTrack(); 
@@ -138,34 +131,56 @@ G4String p_name = step->GetTrack()->GetDynamicParticle()->GetDefinition()->GetPa
 
 			double cx = momentum.x();
 			double cy = momentum.y();
-			double cz = momentum.z();
+			double cz = -momentum.z();
 
-			file1<< kinEnergy << "\t" << cx << "\t" << cy << "\t" << cz << "\t" << evID << "\t" << X << "\t" << Y << endl;
+
+			double numem = cx * normGlob.x() + cy * normGlob.y() + cz * normGlob.z();
+			double denum = sqrt(pow(cx, 2) + pow(cy, 2) + pow(cz, 2)) * sqrt(pow(normGlob.x(), 2) + pow(normGlob.y(), 2) + pow(normGlob.z(), 2));
+			double ang_inc = acos(numem / denum) * 180.0 / M_PI;
+
+
+
+			file1<< kinEnergy << "\t" << ang_inc << endl;
 
 			step->GetTrack()->SetTrackStatus(fStopAndKill);
 
 		}
 
 
-
-		if ((p_name == "e-" or p_name == "e+") and R < 1000)
+		if ((p_name == "e-" or p_name == "e+"))
 		{
 
 
-			ofstream file2("electron_data_nocos.txt", ios::app);
+			const G4VTouchable *touchable = point1->GetTouchable();
+			const G4RotationMatrix *rot = touchable->GetRotation();
+			G4RotationMatrix rotInv = rot->inverse();
+			G4ThreeVector transl = touchable->GetTranslation();
+			G4VSolid *sector = touchable->GetSolid();
+			G4ThreeVector posLoc = *rot * (stepPos - transl);
+			G4ThreeVector norm = sector->SurfaceNormal(posLoc);
+			G4ThreeVector normGlob = rotInv * norm;
 
 			G4Track* track = step->GetTrack(); 
-			G4ThreeVector momentum = track->GetMomentumDirection(); 
 			G4double kinEnergy = track->GetKineticEnergy()/GeV; 
+
+			ofstream file2("data/electron_data_" + jobid + ".txt", ios::app);
+
+			G4ThreeVector momentum = track->GetMomentumDirection(); 
 
 			double cx = momentum.x();
 			double cy = momentum.y();
-			double cz = momentum.z();
+			double cz = -momentum.z();
 
-			if (cz < 0.0) 
+			if (cz > 0.0) 
 			{
+
+
+				double numem = cx * normGlob.x() + cy * normGlob.y() + cz * normGlob.z();
+				double denum = sqrt(pow(cx, 2) + pow(cy, 2) + pow(cz, 2)) * sqrt(pow(normGlob.x(), 2) + pow(normGlob.y(), 2) + pow(normGlob.z(), 2));
+				double ang_inc = acos(numem / denum) * 180.0 / M_PI;
+
 				EL++;
-				file2<< kinEnergy << "\t" << cx << "\t" << cy << "\t" << cz << "\t" << evID << "\t" << X << "\t" << Y << endl;
+				file2<< kinEnergy << "\t" << ang_inc << endl;
 			}
 			else
 			{
@@ -178,49 +193,7 @@ G4String p_name = step->GetTrack()->GetDynamicParticle()->GetDefinition()->GetPa
 
 		}
 	
-
-		if (p_name == "proton" and R < 1000)
-		{
-
-			ofstream file3("proton_data_" + to_string(p) + ".txt", ios::app);
-
-			G4Track* track = step->GetTrack(); 
-			G4ThreeVector momentum = track->GetMomentumDirection(); 
-			G4double kinEnergy = track->GetKineticEnergy()/GeV; 
-
-			double cx = momentum.x();
-			double cy = momentum.y();
-			double cz = momentum.z();
-
-			file3<< kinEnergy << "\t" << cx << "\t" << cy << "\t" << cz << "\t" << evID << "\t" << X << "\t" << Y << endl;
-
-		}
-
-    
-
-		if (p_name == "gamma" and R < 1000)
-		{
-
-
-			ofstream file5("gamma_data_" + to_string(p) + ".txt", ios::app);
-
-			G4Track* track = step->GetTrack(); 
-			G4ThreeVector momentum = track->GetMomentumDirection(); 
-			G4double kinEnergy = track->GetKineticEnergy()/GeV; 
-
-			double cx = momentum.x();
-			double cy = momentum.y();
-			double cz = momentum.z();
-
-			file5 << kinEnergy << "\t" << cx << "\t" << cy << "\t" << cz << "\t" << evID << "\t" << X << "\t" << Y << endl;
-
-			step->GetTrack()->SetTrackStatus(fStopAndKill);
-
-		}	
-
-
 	  step->GetTrack()->SetTrackStatus(fStopAndKill);
-
 	}
 
 

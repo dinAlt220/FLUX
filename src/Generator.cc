@@ -9,7 +9,7 @@ using namespace std;
 Generator::Generator()
 {
 
-	for (int i = E1; i < E2; i++)
+	for (int i = E1; i <= E2; i++)
 	{
 		myVec_en.push_back(i);
 	}
@@ -72,7 +72,6 @@ double Generator::get_E()
 
 	double theta_map = ceilf((theta * 180.0 / M_PI) * 1.0) / 1.0;
 
-
 	auto res = myMap_I.find(theta_map);
 
 	if (res == myMap_I.end())
@@ -87,7 +86,7 @@ double Generator::get_E()
 			myVec_I.push_back(s);
 
 
-			if (eni == myVec_en.size() - 1)
+			if (eni == E2 - 1)
 			{
 				myVec_edges.push_back(0.0);
 				myVec_edges.push_back(s);
@@ -99,17 +98,18 @@ double Generator::get_E()
 
 	}
 
-
 	auto res_I = myMap_I.find(theta_map);
 	auto res_edges = myMap_edges.find(theta_map);
+
 
 	vector<double> &x_new = myVec_en;
 	vector<double> &y_new = res_I->second;
 	vector<double> &edges = res_edges->second;
 
+
 	double rnd = edges[0] + (edges[1] - edges[0]) * G4UniformRand();
 
-	for (int i = 0; i < myVec_en.size() - 1; i++)
+	for (int i = 0; i < myVec_en.size(); i++)
 	{
 		if (rnd >= y_new[i] and rnd < y_new[i+1])
 		{
@@ -122,6 +122,11 @@ double Generator::get_E()
 		}
 	}
 
+	// std::cout << "here" << endl;
+	// // std::cout << x1 << endl;
+	// // std::cout << x2 << endl;
+	// // std::cout << y1 << endl;
+	// std::cout << y2 << endl;
 
 	double b;
 	double k;
@@ -138,7 +143,9 @@ double Generator::get_E()
 	}
 
 	E = k * rnd + b;
-	
+
+	// std::cout << k << endl;
+
 	return E;
 }
 

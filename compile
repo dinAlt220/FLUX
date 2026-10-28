@@ -7,4 +7,3 @@ source /home/itep/skobliakov/app/CERN/geant4-v11.4.3-install/bin/geant4.sh
 cd $HOME/FLUX/build/
 cmake ..
 make
-./Mdet

@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-phys = ""
+phys = "QGSP_BERT_HP"
 
 MASS = {"el": 0.000511, "mu": 0.10566}
 
@@ -53,7 +53,7 @@ def get(name):
     return (el_E, mu_E, el_ang, mu_ang)
 
 
-el_E, mu_E, el_ang, mu_ang = get("TEST2")
+el_E, mu_E, el_ang, mu_ang = get("EPOS")
 
 cor_el_E = np.zeros(100000)
 cor_mu_E = np.zeros(100)
@@ -76,7 +76,7 @@ for i in mu_E:
 
 
 el_g4 = []
-with open("../build/electron_data" + phys + ".txt", "r") as file:
+with open("../comp_corsika/electron_data_" + phys + ".txt", "r") as file:
     lines = file.readlines()
     for line in lines:
 
@@ -88,7 +88,7 @@ el_g4 = np.array(el_g4)
 
 
 mu_g4 = []
-with open("../build/muon_data" + phys + ".txt", "r") as file:
+with open("../comp_corsika/muon_data_" + phys + ".txt", "r") as file:
     lines = file.readlines()
     for line in lines:
 
@@ -164,7 +164,7 @@ print(len(el_E) / len(mu_E))
 
 
 theta_el_g4 = []
-with open("../build/electron_data" + phys + ".txt", "r") as file:
+with open("../comp_corsika/electron_data_" + phys + ".txt", "r") as file:
     lines = file.readlines()
     for line in lines:
 
@@ -184,7 +184,7 @@ theta_el_g4 = np.array(theta_el_g4)
 
 
 theta_mu_g4 = []
-with open("../build/muon_data" + phys + ".txt", "r") as file:
+with open("../comp_corsika/muon_data_" + phys + ".txt", "r") as file:
     lines = file.readlines()
     for line in lines:
 

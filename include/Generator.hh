@@ -27,7 +27,7 @@ public:
 	int cout = 0;
 
 	int E1 = 15;
-	int E2 = 100000;
+	int E2 = 25;
 
 
 	map<double, vector<double>> myMap_I;

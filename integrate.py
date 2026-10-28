@@ -21,11 +21,13 @@ def spect1(E):
 	return E**-2.7
 
 
-E = np.arange(1.0, 1e5, 1.0)
+
+E = np.arange(0.0, 1000, 1.0)
+
+
 
 plt.plot(E, spect(E))
-plt.plot(E, spect1(E))
-plt.xscale("log")
+# plt.xscale("log")
 plt.yscale("log")
 plt.show()
 

@@ -49,7 +49,7 @@ using namespace std;
 DetectorConstruction::DetectorConstruction() : G4VUserDetectorConstruction()
 {
 
-    G4double size = 5000000*m;
+    G4double size = 14000*km;
 
     nist = G4NistManager::Instance();
     world_mat = nist->FindOrBuildMaterial("G4_Galactic");
@@ -147,15 +147,18 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 
     double r = 1000;
     double center[42]{};
-
+    double R[43]{};
+    R[0] = 6371000.0;
 
     double s = 0.0;
+
     for (int i = 0; i < 42; i++)
     {
         center[i] = s + h[i] / 2.0;
 
-        s = s + h[i];
+        R[i+1] = R[i] + h[i];
 
+        s = s + h[i];
     }
 
 
@@ -172,17 +175,19 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
     {
 
 
-        G4Tubs* layer = new G4Tubs("layer", 0*m, r*km, (h[i] / 2)*m, 0*deg, 360*deg);
+        //G4Tubs* layer = new G4Tubs("layer", 0*m, r*km, (h[i] / 2)*m, 0*deg, 360*deg);
+        G4Sphere* layer = new G4Sphere("layer", R[i]*m, R[i+1]*m, 0*deg, 360*deg, 0*deg, 90*deg);
         G4LogicalVolume *log_layer = new G4LogicalVolume(layer, air[i], "log_layer");
-        new G4PVPlacement(0, G4ThreeVector(0*m, 0.0*m, center[i]*m), log_layer,
+        new G4PVPlacement(0, G4ThreeVector(0*m, 0.0*m, 0*m), log_layer,
                                                     "layer", log_world, true, 0);
 
     }
 
 
-    G4Tubs* det = new G4Tubs("det_shape", 0*m, 1000*km, 0.1*mm, 0*deg, 360*deg);
+    //G4Tubs* det = new G4Tubs("det_shape", 0*m, 1000*km, 0.1*mm, 0*deg, 360*deg);
+    G4Sphere* det = new G4Sphere("det_shape", R[0]*m - 0.1*mm, R[0]*m, 0*deg, 360*deg, 0*deg, 90*deg);
     log_det = new G4LogicalVolume(det, vac, "log_det");
-    new G4PVPlacement(0, G4ThreeVector(0*m, 0.0*m,-0.1*mm), log_det,
+    new G4PVPlacement(0, G4ThreeVector(0*m, 0.0*m, 0.0*mm), log_det,
                                                 "det", log_world, true, 0);
 
     log_world->SetVisAttributes (G4VisAttributes::GetInvisible());

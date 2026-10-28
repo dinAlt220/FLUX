@@ -20,7 +20,7 @@ double Functions::dIdp(double theta, double E)
 	double alpha = -3.915;
 	double beta = 1.165;
 
-	return A * pow((E + B), alpha) * pow(E, beta) * sin(theta);
+	return A * pow((E + B), alpha) * pow(E, beta) * sin(theta) * cos(theta);
 }
 
 
@@ -42,7 +42,7 @@ double Functions::gen_theta(vector<double> myTheta, vector<double> myTheta_I, ve
 
 	double rnd = edges[0] + (edges[1] - edges[0]) * G4UniformRand();
 
-	for (int i = 0; i < y_new.size()-1; i++)
+	for (int i = 0; i < y_new.size(); i++)
 	{
 		if (rnd >= y_new[i] and rnd < y_new[i+1])
 		{

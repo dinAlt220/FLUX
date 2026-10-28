@@ -1,5 +1,5 @@
 #include "DetectorConstruction.hh"
-#include <QGSP_BIC_HP.hh>
+#include <QGSP_BERT_HP.hh>
 #include <G4UImanager.hh>
 #include <G4UIExecutive.hh>
 #include "Action.hh"
@@ -28,7 +28,7 @@ using namespace std;
 int main(int argc,char** argv)
 {
 
-    // G4Random::setTheEngine(new CLHEP::RanecuEngine);
+    G4Random::setTheEngine(new CLHEP::RanecuEngine);
 
     G4RunManager *run = new G4RunManager;
 
@@ -40,26 +40,16 @@ int main(int argc,char** argv)
     run->SetUserInitialization(geom);
 
 
-
-    // G4PhysListFactory factory;
-    // G4VModularPhysicsList* phys = factory.GetReferencePhysList("Shielding_HPT");
-
-    QGSP_BIC_HP *phys = new QGSP_BIC_HP;
-
-    // UrQMD *phys = new UrQMD;
-
-    // PhysicsList* phys = new PhysicsList();
-    // phys->AddPhysicsList("FTFP_BERT_CRMC_EPOS199");
+    QGSP_BERT_HP *phys = new QGSP_BERT_HP;
 
     // phys->ReplacePhysics(new G4EmStandardPhysics_option4());
     //phys->RegisterPhysics(new G4ChargeExchangePhysics());
     // phys->ReplacePhysics(new G4EmStandardPhysics_option4());
     // phys->RegisterPhysics(new G4EmLivermorePhysics);
     // phys->RegisterPhysics(new G4RadioactiveDecayPhysics());
+
     phys->RegisterPhysics(new G4ParallelWorldPhysics(paraWorldName));
     run->SetUserInitialization(phys);
-
-
 
 
 
@@ -139,7 +129,7 @@ int main(int argc,char** argv)
     double par1 = G4Threading::G4GetThreadId() + a1;
     G4Random::setTheSeed( seed1, par1);
 
-    int number = 10000;
+	    int number = 200000;
     UImanager->ApplyCommand("/run/beamOn " + std::to_string(number));
     
     delete ui;
